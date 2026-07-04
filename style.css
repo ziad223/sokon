@@ -1,0 +1,41 @@
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fdfbf9;
+            scroll-behavior: smooth;
+        }
+
+        .websocket-badge.connected {
+            background-color: #10b981;
+        }
+
+        .websocket-badge.disconnected {
+            background-color: #ef4444;
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .cached-img {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* إخفاء شريط التمرير للسلة */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a4573a;
+        }

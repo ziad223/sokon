@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطعم وكافيه سُكون - إطلالة الخطم بجبال فيفاء | Sokon Restaurant</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="استمتع بأشهى المأكولات العربية والإيطالية في أعلى قمة جبلية بجبال فيفاء بجازان. تجربة استثنائية تجمع روعة الإطلالة البانورامية وعراقة المذاق السعودي الأصيل.">
+    <meta name="keywords" content="مطعم سكون, كافيه سكون, جبال فيفاء, إطلالة الخطم, مطاعم جازان, مندي فيفاء, باستا إيطالية فيفاء, حجز طاولات فيفاء, المطبخ الذكي">
+    <meta name="author" content="Sokon Restaurant & Cafe">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sokon.sa/">
+    <meta property="og:title" content="مطعم وكافيه سُكون - إطلالة الخطم بجبال فيفاء">
+    <meta property="og:description" content="تذوق المذاق الأصيل فوق السحاب. حجز طاولات فوري وتتبع مباشر لطلبك عبر المطبخ الذكي.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&h=630&q=80">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sokon.sa/">
+    <meta property="twitter:title" content="مطعم وكافيه سُكون - إطلالة الخطم بجبال فيفاء">
+    <meta property="twitter:description" content="تذوق المذاق الأصيل فوق السحاب. حجز طاولات فوري وتتبع مباشر لطلبك عبر المطبخ الذكي.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&h=630&q=80">
+
+    <!-- Favicon -->
+     <link rel="icon" href="logo.png" type="image/png">
+
+     <link rel="stylesheet" href="style.css">
+
+     
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sokon: {
+                            DEFAULT: '#a4573a',
+                            light: '#b96b4e',
+                            dark: '#8b442b',
+                            bg: '#fdfbf9'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+   
+</head>
+
+<body class="text-gray-800 antialiased min-h-screen flex flex-col justify-between pb-20 md:pb-0">
+
+    <div id="toastContainer"
+        class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-2 pointer-events-none w-full max-w-sm px-4">
+    </div>
+
+    <!-- 1. Modal الدخول وإنشاء الحساب (OTP) -->
+    <div id="authModal"
+        class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="toggleModal('authModal')"
+                class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div class="text-center mb-5">
+                <img src="logo.png" alt="Sokon Logo" class="h-14 mx-auto mb-2"
+                    onerror="this.src='https://placehold.co/150x150?text=Sokon'">
+                <h3 class="text-lg font-black text-sokon">منصة سُكون الرقمية</h3>
+                <p class="text-gray-500 text-[10px] mt-0.5">تتبع طلباتك لحظياً واجمع نقاط المكافآت</p>
+            </div>
+
+            <!-- تبديل التاب بين الدخول وإنشاء حساب -->
+            <div class="flex border-b border-gray-100 mb-5 text-xs">
+                <button id="tabLogin" onclick="switchAuthTab('login')" class="w-1/2 pb-2.5 font-bold text-sokon border-b-2 border-sokon text-center transition-all">تسجيل الدخول</button>
+                <button id="tabRegister" onclick="switchAuthTab('register')" class="w-1/2 pb-2.5 font-bold text-gray-400 text-center transition-all">إنشاء حساب جديد</button>
+            </div>
+
+            <div id="otpStep1">
+                <!-- حقل الاسم (يظهر فقط في إنشاء الحساب) -->
+                <div id="nameInputDiv" class="mb-4 hidden">
+                    <label class="block text-xs font-bold text-gray-600 mb-2">الاسم الكامل</label>
+                    <div class="relative flex items-center bg-gray-50 border border-gray-200 focus-within:border-sokon focus-within:ring-1 focus-within:ring-sokon/30 rounded-2xl p-1 transition-all">
+                        <div class="relative flex-grow flex items-center pr-3 py-2">
+                            <i class="fa-solid fa-user text-gray-400 ml-2 text-sm"></i>
+                            <input type="text" id="registerName"
+                                class="w-full bg-transparent border-none outline-none text-xs text-gray-800 font-semibold focus:outline-none focus:ring-0 focus:border-none p-1"
+                                placeholder="اكتب الاسم">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- حقل الجوال -->
+                <div class="mb-5">
+                    <label class="block text-xs font-bold text-gray-600 mb-2">رقم الجوال</label>
+                    <div class="relative flex items-center bg-gray-50 border border-gray-200 focus-within:border-sokon focus-within:ring-1 focus-within:ring-sokon/30 rounded-2xl p-1 transition-all">
+                        <!-- مفتاح البلد مع العلم -->
+                        <div class="flex items-center gap-1.5 px-3 py-2 bg-white rounded-xl border border-gray-100 shadow-sm shrink-0 select-none">
+                            <span class="text-xs">🇸🇦</span>
+                            <span class="text-xs font-black text-gray-700 dir-ltr">+966</span>
+                        </div>
+                        <!-- فاصل رأسي -->
+                        <div class="w-px h-6 bg-gray-200 mx-2"></div>
+                        <!-- حقل الإدخال -->
+                        <div class="relative flex-grow flex items-center pr-1">
+                            <i class="fa-solid fa-mobile-screen text-gray-400 ml-2.5 text-sm"></i>
+                            <input type="tel" id="userPhone" maxlength="9"
+                                class="w-full bg-transparent border-none outline-none text-sm text-gray-800 font-semibold tracking-widest placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-none p-2"
+                                placeholder="5xxxxxxxx">
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-1.5"><i class="fa-solid fa-circle-info ml-1"></i>أدخل رقم جوالك المكون من 9 أرقام يبدأ بـ 5</p>
+                </div>
+
+                <button onclick="sendOTP()"
+                    class="w-full bg-sokon hover:bg-sokon-dark text-white font-bold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-2 text-xs shadow-md shadow-sokon/10">
+                    <span id="authSubmitText">إرسال رمز التفعيل</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+                <button onclick="quickGuestLogin()"
+                    class="w-full mt-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-2 border border-gray-200 text-xs">
+                    <span>دخول سريع كزائر (للتجربة)</span>
+                    <i class="fa-solid fa-user-astronaut text-sokon"></i>
+                </button>
+            </div>
+
+            <div id="otpStep2" class="hidden">
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">رمز التحقق (6 أرقام)</label>
+                    <input type="text" id="otpCode" maxlength="6"
+                        class="block w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-sokon focus:border-sokon text-center text-2xl tracking-widest font-bold"
+                        placeholder="000000">
+                </div>
+                <button onclick="verifyOTP()"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-2">
+                    <span>تأكيد الرمز والدخول</span>
+                    <i class="fa-solid fa-circle-check"></i>
+                </button>
+                <button onclick="resetOTPForm()"
+                    class="w-full text-sm text-gray-500 hover:text-sokon mt-4 text-center block transition">تعديل رقم
+                    الجوال</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Modal حجز طاولة -->
+    <div id="bookingModal"
+        class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleModal('bookingModal')"
+                class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-xl font-bold text-sokon mb-4"><i class="fa-solid fa-calendar-days ml-2"></i>حجز طاولة -
+                ديوانية سُكون</h3>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">اختر التاريخ</label>
+                    <input type="date" id="bookingDate"
+                        class="w-full border border-gray-300 rounded-xl p-3 focus:ring-sokon focus:border-sokon">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">اختر الطاولة المتاحة</label>
+                    <div class="grid grid-cols-3 gap-2" id="tablesGrid">
+                        <!-- تُولد عبر JS -->
+                    </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+                    <p class="font-bold text-xs"><i class="fa-solid fa-circle-info ml-1"></i> سياسة العربون والاسترداد:
+                    </p>
+                    <ul class="list-disc list-inside mt-1 space-y-1 text-[11px]">
+                        <li>مبلغ العربون لتأكيد الحجز: <strong>25 ريال سعودي</strong>.</li>
+                        <li>إلغاء الحجز قبل بـ 24 ساعة: استرداد كامل 100%.</li>
+                        <li>إلغاء الحجز قبل أقل من ساعة: لا يوجد استرداد (0%).</li>
+                    </ul>
+                </div>
+                <button onclick="confirmBooking()"
+                    class="w-full bg-sokon hover:bg-sokon-dark text-white font-bold py-3 px-4 rounded-xl transition duration-300">
+                    تأكيد الحجز ودفع العربون
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. نافذة دفع Moyasar الاحترافية -->
+    <div id="moyasarModal"
+        class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative border border-gray-100">
+            <button onclick="toggleModal('moyasarModal')"
+                class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <div>
+                    <h3 class="text-lg font-black text-gray-900">بوابة دفع ميسر</h3>
+                    <p class="text-[11px] text-gray-400">Moyasar Payment Gateway</p>
+                </div>
+                <div class="text-left">
+                    <span class="text-xs text-gray-400 block">المبلغ المطلوب</span>
+                    <span class="text-xl font-black text-sokon"><span id="moyasarPayAmount">0</span> ريال</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="selectPaymentMethod('mada')" id="btnMada"
+                    class="pay-method-btn border-2 border-sokon bg-sokon/5 rounded-xl p-2 flex flex-col items-center justify-center transition">
+                    <i class="fa-solid fa-credit-card text-sokon text-lg mb-1"></i>
+                    <span class="text-[10px] font-bold">مدى</span>
+                </button>
+                <button onclick="selectPaymentMethod('visa')" id="btnVisa"
+                    class="pay-method-btn border border-gray-200 rounded-xl p-2 flex flex-col items-center justify-center transition hover:bg-gray-50">
+                    <i class="fa-brands fa-cc-visa text-blue-600 text-lg mb-1"></i>
+                    <span class="text-[10px] font-bold">فيزا / ماستر</span>
+                </button>
+                <button onclick="selectPaymentMethod('apple')" id="btnApple"
+                    class="pay-method-btn border border-gray-200 rounded-xl p-2 flex flex-col items-center justify-center transition hover:bg-gray-50">
+                    <i class="fa-brands fa-apple-pay text-black text-xl mb-0.5"></i>
+                    <span class="text-[10px] font-bold">Apple Pay</span>
+                </button>
+            </div>
+
+            <div id="creditCardForm" class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1">إسم حامل البطاقة</label>
+                    <input type="text" id="cardName"
+                        class="w-full border border-gray-300 rounded-xl p-2.5 text-xs focus:ring-sokon font-semibold uppercase"
+                        placeholder="MOHAMMED AL-AHMADI">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1">رقم البطاقة</label>
+                    <div class="relative">
+                        <input type="text" id="cardNumber" maxlength="19"
+                            class="w-full border border-gray-300 rounded-xl p-2.5 pl-10 text-xs focus:ring-sokon tracking-widest font-bold"
+                            placeholder="4000 1234 5678 9010">
+                        <i id="cardIcon" class="fa-solid fa-credit-card absolute left-3 top-3.5 text-gray-400"></i>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-600 mb-1">تاريخ الانتهاء</label>
+                        <input type="text" id="cardExpiry" maxlength="5"
+                            class="w-full border border-gray-300 rounded-xl p-2.5 text-xs text-center focus:ring-sokon font-bold tracking-widest"
+                            placeholder="MM/YY">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-600 mb-1">رمز التحقق (CVV)</label>
+                        <input type="password" id="cardCvv" maxlength="3"
+                            class="w-full border border-gray-300 rounded-xl p-2.5 text-xs text-center focus:ring-sokon font-bold tracking-widest"
+                            placeholder="***">
+                    </div>
+                </div>
+            </div>
+
+            <div id="applePayBtnContainer" class="hidden py-4">
+                <button onclick="processMoyasarPayment()"
+                    class="w-full bg-black text-white rounded-xl py-3 flex items-center justify-center gap-2 font-bold hover:bg-gray-900 transition shadow-md">
+                    <i class="fa-brands fa-apple-pay text-2xl"></i>
+                    <span>الدفع عبر أبل باي</span>
+                </button>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-100">
+                <button onclick="processMoyasarPayment()" id="mainPayBtn"
+                    class="w-full bg-sokon hover:bg-sokon-dark text-white font-bold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-2 text-sm shadow-md">
+                    <span>تأكيد الدفع ونقل الطلب للمطبخ</span>
+                    <i class="fa-solid fa-shield-jwt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- الهيدر الرئيسي (Header) -->
+    <header class="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between">
+            <div class="flex items-center gap-1.5 md:gap-4">
+                <img src="logo.png" alt="Sokon Logo" class="h-8 md:h-14 transition-all"
+                    onerror="this.src='https://placehold.co/150x150?text=Sokon'">
+                <div>
+                    <span class="text-xs sm:text-sm md:text-xl font-black text-sokon block tracking-wide transition-all">مَطْعَم
+                        سُكُون</span>
+                    <span class="text-[7px] md:text-[10px] text-gray-400 block -mt-0.5 md:-mt-1 transition-all">إطلالة
+                        الخطم — فيفاء</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-6 font-semibold text-gray-600 text-sm">
+                <a href="#hero" class="hover:text-sokon transition">الرئيسية</a>
+                <a href="#about" class="hover:text-sokon transition">قصتنا</a>
+                <a href="#menu" class="hover:text-sokon transition">قائمة الطعام</a>
+                <a href="#testimonials" class="hover:text-sokon transition">آراء الضيوف</a>
+                <a href="#loyalty" class="hover:text-sokon transition">كارت الولاء</a>
+                <button onclick="toggleKitchenSection()" class="bg-slate-900 text-white hover:bg-sokon transition px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-desktop"></i>
+                    <span>شاشة المطبخ (KDS)</span>
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <div
+                    class="hidden sm:flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium">
+                    <span id="wsStatusDot"
+                        class="w-2.5 h-2.5 rounded-full websocket-badge disconnected animate-pulse"></span>
+                    <span id="wsStatusText" class="text-gray-500">جاري الاتصال بـ Reverb...</span>
+                </div>
+
+                <button onclick="toggleCartSidebar()"
+                    class="relative p-2.5 bg-gray-50 hover:bg-sokon/10 hover:text-sokon rounded-xl transition border border-gray-100">
+                    <i class="fa-solid fa-basket-shopping text-lg"></i>
+                    <span id="cartCount"
+                        class="absolute -top-1 -right-1 bg-sokon text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+
+                <div id="userProfileArea">
+                    <button onclick="toggleModal('authModal')"
+                        class="bg-sokon hover:bg-sokon-dark text-white font-bold px-4 py-2 rounded-xl transition text-xs shadow-sm flex items-center gap-1.5">
+                        <i class="fa-solid fa-user"></i>
+                        <span>دخول</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- الهيرو / الواجهة الترحيبية -->
+    <section id="hero" class="relative bg-gradient-to-b from-sokon/5 to-transparent pt-12 pb-16 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <span
+                class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider mb-4 inline-block border border-sokon/20">تذوق
+                الأصالة من قمم فيفاء</span>
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight max-w-3xl mx-auto">
+                أطباق <span class="text-sokon">عربية وإيطالية</span> ساحرة مع إطلالة سُكون
+            </h1>
+            <p class="text-gray-500 mt-4 max-w-xl mx-auto text-sm">
+                تجربة استثنائية مربوطة لحظياً بأنظمة Foodics والمطبخ الذكي.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+                <a href="#menu"
+                    class="bg-sokon hover:bg-sokon-dark text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-sokon/20 transition transform hover:-translate-y-0.5 text-sm">
+                    تصفح المنيو
+                </a>
+                <button onclick="openBookingModal()"
+                    class="bg-white border-2 border-sokon/30 hover:border-sokon text-sokon font-bold px-6 py-3 rounded-xl transition text-sm">
+                    <i class="fa-solid fa-table-cells ml-2"></i>حجز طاولة
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم قصة سكون وإطلالة الخطم -->
+    <section id="about" class="w-full py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- الجانب النصي -->
+                <div class="order-2 lg:order-1 space-y-6">
+                    <span
+                        class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider inline-block border border-sokon/20">من
+                        قمم جبال فيفاء</span>
+                    <h2 class="text-3xl font-black text-gray-900 leading-tight">
+                        قصتنا في <span class="text-sokon">إطلالة الخطم</span> الساحرة
+                    </h2>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        في أعلى نقطة سياحية بجبال فيفاء، حيث يلتقي الضباب بعبق القهوة السعودية والمذاق الأصيل، تأسس مطعم
+                        وكافيه سُكون. نسعى لتقديم تجربة استثنائية تجمع بين روعة المنظر الطبيعي وجمال النكهات الشرقية
+                        والإيطالية الفاخرة.
+                    </p>
+
+                    <!-- مميزات سريعة -->
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-sokon/10 text-sokon flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xs text-gray-800">مكونات طازجة</h4>
+                                <p class="text-[10px] text-gray-400 mt-0.5">منتقاة يومياً بكل عناية</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-sokon/10 text-sokon flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-mountain"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xs text-gray-800">إطلالة بانورامية</h4>
+                                <p class="text-[10px] text-gray-400 mt-0.5">فوق السحاب والضباب</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-sokon/10 text-sokon flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xs text-gray-800">تحضير فوري</h4>
+                                <p class="text-[10px] text-gray-400 mt-0.5">مربوط بالكامل بالمطبخ الذكي</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-sokon/10 text-sokon flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xs text-gray-800">ضيافة سعودية</h4>
+                                <p class="text-[10px] text-gray-400 mt-0.5">ترحيب حار يليق بضيوفنا</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الجانب البصري المعبر -->
+                <div class="order-1 lg:order-2 relative">
+                    <div
+                        class="absolute -inset-2 bg-gradient-to-tr from-sokon to-sokon-light rounded-3xl blur-lg opacity-10">
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"
+                        alt="Sokon Ambiance"
+                        class="relative rounded-3xl shadow-xl w-full aspect-[4/3] object-cover border border-slate-100">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- المنيو وقائمة الطعام -->
+    <section id="menu" class="w-full bg-white border-t border-gray-100 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-2xl font-black text-gray-900">قائمة الطعام</h2>
+                    <p class="text-gray-400 text-xs mt-1">مزامنة لحظية مع Foodics API</p>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                    <!-- مربع البحث السريع -->
+                    <div
+                        class="relative flex items-center bg-gray-50 border border-gray-200 focus-within:border-sokon focus-within:ring-1 focus-within:ring-sokon/30 rounded-xl px-3.5 py-2 transition-all w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2 text-xs"></i>
+                        <input type="text" id="menuSearch" oninput="renderMenu()" placeholder="ابحث عن وجبتك المفضلة..."
+                            class="bg-transparent border-none outline-none text-xs w-full text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-0">
+                    </div>
+                    <!-- تصنيفات القائمة -->
+                    <div class="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto" id="categoryTabs">
+                        <button onclick="filterCategory('all', this)"
+                            class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-sokon text-white shadow-md shadow-sokon/10 transition whitespace-nowrap">الكل</button>
+                        <button onclick="filterCategory('arabic', this)"
+                            class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition whitespace-nowrap">عربي</button>
+                        <button onclick="filterCategory('italian', this)"
+                            class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition whitespace-nowrap">إيطالي</button>
+                        <button onclick="filterCategory('drinks', this)"
+                            class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition whitespace-nowrap">مشروبات</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="menuGrid">
+                <!-- تُولد بـ JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم آراء الضيوف -->
+    <section id="testimonials" class="w-full py-20 bg-slate-50 border-t border-b border-slate-100 relative overflow-hidden">
+        <!-- زينة خلفية -->
+        <div class="absolute top-0 right-1/4 w-96 h-96 bg-sokon/5 rounded-full blur-3xl opacity-30"></div>
+        <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-sokon-light/5 rounded-full blur-3xl opacity-30"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider mb-2 inline-block border border-sokon/20">تجارب حقيقية</span>
+                <h2 class="text-3xl font-black text-gray-900 leading-tight">ماذا قالوا عن سُكون؟</h2>
+                <p class="text-xs text-gray-500 mt-2">آراء ومراجعات ضيوفنا الذين شاركونا اللحظات الجميلة في أعلى قمة جبلية</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- رأي 1 -->
+                <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex flex-col justify-between">
+                    <!-- أيقونة اقتباس خلفية -->
+                    <i class="fa-solid fa-quote-right absolute top-6 left-6 text-slate-100 text-5xl pointer-events-none"></i>
+                    
+                    <div class="relative">
+                        <div class="flex items-center gap-1 text-amber-400 text-xs mb-4">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 text-xs leading-relaxed italic mb-6 relative z-10">
+                            "المكان خيالي في قمة الجبل، تجربة الأكل مع إطلالة الخطم والضباب لا توصف. المندي لحم لذيذ جداً والباستا الإيطالية مضبوطة ومميزة."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 border-t pt-4 border-slate-100">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80" alt="Fahad Al-Khalidi" class="w-9 h-9 rounded-full object-cover shadow-sm ring-2 ring-sokon/10">
+                        <div>
+                            <h4 class="font-bold text-xs text-gray-800">فهد الخالدي</h4>
+                            <span class="text-[9px] text-gray-400">زائر من الرياض</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- رأي 2 -->
+                <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex flex-col justify-between">
+                    <i class="fa-solid fa-quote-right absolute top-6 left-6 text-slate-100 text-5xl pointer-events-none"></i>
+                    
+                    <div class="relative">
+                        <div class="flex items-center gap-1 text-amber-400 text-xs mb-4">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 text-xs leading-relaxed italic mb-6 relative z-10">
+                            "التطبيق رائع وسهل جداً، طلبت ودفعت بـ Apple Pay وتابعت تحضير الطلب في المطبخ خطوة بخطوة بالثواني. فكرة كرت الولاء الرقمي مبتكرة!"
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 border-t pt-4 border-slate-100">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80" alt="Mohammed Al-Shahrani" class="w-9 h-9 rounded-full object-cover shadow-sm ring-2 ring-sokon/10">
+                        <div>
+                            <h4 class="font-bold text-xs text-gray-800">محمد الشهراني</h4>
+                            <span class="text-[9px] text-gray-400">زائر دائم للمطعم</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- رأي 3 -->
+                <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex flex-col justify-between">
+                    <i class="fa-solid fa-quote-right absolute top-6 left-6 text-slate-100 text-5xl pointer-events-none"></i>
+                    
+                    <div class="relative">
+                        <div class="flex items-center gap-1 text-amber-400 text-xs mb-4">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <p class="text-gray-600 text-xs leading-relaxed italic mb-6 relative z-10">
+                            "المشروبات الباردة والقهوة ممتازة جداً. حجز الطاولة مسبقاً من الويب يحل مشكلة الانتظار تماماً وخصوصاً في أوقات العطلات السياحية."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 border-t pt-4 border-slate-100">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80" alt="Sara Al-Faifi" class="w-9 h-9 rounded-full object-cover shadow-sm ring-2 ring-sokon/10">
+                        <div>
+                            <h4 class="font-bold text-xs text-gray-800">سارة الفيفي</h4>
+                            <span class="text-[9px] text-gray-400">عميلة محلية</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- نظام كارت الولاء الذكي -->
+    <section id="loyalty"
+        class="bg-gradient-to-r from-sokon to-sokon-dark text-white my-10 mx-4 lg:mx-auto max-w-7xl rounded-3xl p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-[10rem] pointer-events-none">
+            <i class="fa-solid fa-id-card"></i>
+        </div>
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+            <div class="lg:col-span-2">
+                <span
+                    class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider mb-2 inline-block">برنامج
+                    المكافآت</span>
+                <h2 class="text-2xl font-black mb-3">كارت الولاء الرقمي</h2>
+                <p class="text-white/80 max-w-xl text-xs leading-relaxed">
+                    سجل دخولك ليتم إصدار كارت ولاء تلقائي. يمنحك النظام نقاطاً مقابل كل طلب، الـ 10 نقاط تساوي خصم 1
+                    ريال سعودي!
+                </p>
+                <div class="flex gap-2 mt-4 text-[10px] font-bold text-sokon flex-wrap">
+                    <span class="bg-white px-2 py-1 rounded-lg"><i class="fa-solid fa-award ml-1 text-amber-600"></i>
+                        الفضي</span>
+                    <span class="bg-white px-2 py-1 rounded-lg"><i class="fa-solid fa-crown ml-1 text-yellow-500"></i>
+                        الذهبي</span>
+                    <span class="bg-white px-2 py-1 rounded-lg"><i class="fa-solid fa-gem ml-1 text-blue-400"></i>
+                        البلاتيني</span>
+                </div>
+            </div>
+
+            <!-- الكارت التفاعلي -->
+            <div id="loyaltyCardContainer"
+                class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 shadow-lg text-right">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-[10px] text-white/60">كارت الولاء</p>
+                        <h4 class="text-sm font-bold" id="cardOwnerName">زائر سُكون</h4>
+                    </div>
+                    <span id="cardTierBadge"
+                        class="bg-gray-200 text-gray-800 text-[10px] px-2 py-0.5 rounded-full font-black">لم يسجل</span>
+                </div>
+                <div class="mb-3">
+                    <p class="text-[10px] text-white/60">الرصيد</p>
+                    <div class="flex items-baseline gap-1">
+                        <span id="cardPoints" class="text-2xl font-black">0</span>
+                        <span class="text-[10px] text-white/80">نقطة</span>
+                    </div>
+                </div>
+                <div class="w-full bg-white/20 rounded-full h-1 mb-1.5">
+                    <div id="cardProgress" class="bg-white h-1 rounded-full transition-all duration-500"
+                        style="width: 0%"></div>
+                </div>
+                <p class="text-[9px] text-white/60 text-left" id="cardNextTierText">سجل لتفعيل الكارت واكتساب النقاط</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- شاشة التتبع الاحترافية (تظهر بعد الدفع) -->
+    <section id="orderTrackingSection" class="w-full bg-slate-50 border-t border-b border-gray-200 py-12 hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <span
+                    class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider mb-2 inline-block border border-sokon/20">تحديثات
+                    حية ومزامنة فورية</span>
+                <h2 class="text-3xl font-black text-gray-900">تتبع حالة طلبك</h2>
+                <p class="text-xs text-gray-500 mt-1">يتم تحديث الخطوات لحظياً بواسطة أنظمتنا عبر WebSockets</p>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden">
+                <!-- الهيدر مع معلومات الطلب وتوقيت التحضير -->
+                <div
+                    class="bg-gradient-to-r from-sokon to-sokon-dark p-6 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden">
+                    <div
+                        class="absolute -right-24 -top-24 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute -left-24 -bottom-24 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none">
+                    </div>
+
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div
+                            class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl backdrop-blur-md shadow-inner border border-white/10">
+                            <i id="headerStatusIcon" class="fa-solid fa-circle-notch animate-spin text-white"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-lg font-black tracking-wide">طلب رقم: #<span
+                                        id="trackOrderID">------</span></h2>
+                                <span id="trackOrderTypeBadge"
+                                    class="bg-white/20 text-[9px] font-bold px-2 py-0.5 rounded-lg border border-white/10">محلي</span>
+                            </div>
+                            <p class="text-[11px] text-white/70 mt-0.5"><i class="fa-regular fa-clock ml-1"></i> وقت
+                                الدفع: <span id="trackOrderTime">--:--</span></p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 text-right md:text-left shadow-sm relative z-10 w-full md:w-auto">
+                        <span class="text-[10px] text-white/60 block font-semibold">مؤشر التحضير المتوقع (SLA)</span>
+                        <span id="trackSLACountdown"
+                            class="text-lg font-black block tracking-widest text-white animate-pulse-slow mt-0.5">متبقي:
+                            --:--</span>
+                    </div>
+                </div>
+
+                <div class="p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- المخطط الزمني الاحترافي -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="relative pr-8 border-r-2 border-slate-100 space-y-8 py-2">
+                            <!-- خط التقدم الخلفي الملون -->
+                            <div class="absolute right-[-2px] top-0 bottom-0 w-0.5 bg-slate-100 -z-10"></div>
+
+                            <!-- المراحل الـ 4 -->
+                            <!-- المرحلة 1 -->
+                            <div class="relative transition-all duration-300" id="step_node_1">
+                                <span id="step_dot_1"
+                                    class="absolute -right-[41px] top-2.5 w-6 h-6 rounded-full bg-slate-200 border-4 border-white ring-2 ring-slate-100 flex items-center justify-center text-[8px] text-white font-bold transition-all duration-300"></span>
+                                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex justify-between items-center transition-all duration-300 shadow-sm"
+                                    id="step_card_1">
+                                    <div class="flex items-center gap-3.5">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition-all duration-300"
+                                            id="step_icon_bg_1">
+                                            <i class="fa-solid fa-wallet"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm" id="step_title_1">تأكيد الدفع
+                                                (Moyasar)</h4>
+                                            <p class="text-xs text-slate-400 mt-1 leading-relaxed" id="step_desc_1">في
+                                                انتظار تأكيد بوابة الدفع ميسر...</p>
+                                        </div>
+                                    </div>
+                                    <span id="step_badge_1"
+                                        class="text-[10px] font-bold bg-slate-200 text-slate-600 px-2.5 py-1 rounded-lg">معلق</span>
+                                </div>
+                            </div>
+
+                            <!-- المرحلة 2 -->
+                            <div class="relative transition-all duration-300 opacity-40" id="step_node_2">
+                                <span id="step_dot_2"
+                                    class="absolute -right-[41px] top-2.5 w-6 h-6 rounded-full bg-slate-200 border-4 border-white ring-2 ring-slate-100 flex items-center justify-center text-[8px] text-white font-bold transition-all duration-300"></span>
+                                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex justify-between items-center transition-all duration-300 shadow-sm"
+                                    id="step_card_2">
+                                    <div class="flex items-center gap-3.5">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition-all duration-300"
+                                            id="step_icon_bg_2">
+                                            <i class="fa-solid fa-fire-burner"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm" id="step_title_2">قبول الطلب
+                                                والتحضير</h4>
+                                            <p class="text-xs text-slate-400 mt-1 leading-relaxed" id="step_desc_2">في
+                                                انتظار استلام المطبخ وتجهيز الوجبات.</p>
+                                        </div>
+                                    </div>
+                                    <span id="step_badge_2"
+                                        class="text-[10px] font-bold bg-slate-200 text-slate-600 px-2.5 py-1 rounded-lg">الانتظار</span>
+                                </div>
+                            </div>
+
+                            <!-- المرحلة 3 -->
+                            <div class="relative transition-all duration-300 opacity-40" id="step_node_3">
+                                <span id="step_dot_3"
+                                    class="absolute -right-[41px] top-2.5 w-6 h-6 rounded-full bg-slate-200 border-4 border-white ring-2 ring-slate-100 flex items-center justify-center text-[8px] text-white font-bold transition-all duration-300"></span>
+                                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex justify-between items-center transition-all duration-300 shadow-sm"
+                                    id="step_card_3">
+                                    <div class="flex items-center gap-3.5">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition-all duration-300"
+                                            id="step_icon_bg_3">
+                                            <i class="fa-solid fa-bell-concierge"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm" id="step_title_3">الطلب جاهز
+                                                للاستلام</h4>
+                                            <p class="text-xs text-slate-400 mt-1 leading-relaxed" id="step_desc_3">تم
+                                                تحضير الطلب وجارٍ إعداده للتسليم الفوري.</p>
+                                        </div>
+                                    </div>
+                                    <span id="step_badge_3"
+                                        class="text-[10px] font-bold bg-slate-200 text-slate-600 px-2.5 py-1 rounded-lg">بالمطبخ</span>
+                                </div>
+                            </div>
+
+                            <!-- المرحلة 4 -->
+                            <div class="relative transition-all duration-300 opacity-40" id="step_node_4">
+                                <span id="step_dot_4"
+                                    class="absolute -right-[41px] top-2.5 w-6 h-6 rounded-full bg-slate-200 border-4 border-white ring-2 ring-slate-100 flex items-center justify-center text-[8px] text-white font-bold transition-all duration-300"></span>
+                                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex justify-between items-center transition-all duration-300 shadow-sm"
+                                    id="step_card_4">
+                                    <div class="flex items-center gap-3.5">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition-all duration-300"
+                                            id="step_icon_bg_4">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm" id="step_title_4">تم تسليم
+                                                الطلب بنجاح</h4>
+                                            <p class="text-xs text-slate-400 mt-1 leading-relaxed" id="step_desc_4">تم
+                                                استلام الطلب بالصحة والعافية وإغلاق الفاتورة.</p>
+                                        </div>
+                                    </div>
+                                    <span id="step_badge_4"
+                                        class="text-[10px] font-bold bg-slate-200 text-slate-600 px-2.5 py-1 rounded-lg">منتهي</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- فاتورة ضريبية مبسطة بتصميم فاخر -->
+                    <div
+                        class="bg-amber-50/40 rounded-3xl p-6 border border-amber-200/60 flex flex-col justify-between shadow-inner relative overflow-hidden">
+                        <!-- تأثير القصاصة الورقية للفاتورة -->
+                        <div
+                            class="absolute -top-6 left-0 right-0 h-4 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-100/50 to-transparent">
+                        </div>
+
+                        <div>
+                            <div class="text-center border-b border-dashed border-amber-200 pb-4 mb-4">
+                                <span class="text-[9px] font-black tracking-widest text-sokon/60 block uppercase">مؤسسة
+                                    إطلالة الخطم التجارية</span>
+                                <h4 class="font-black text-sm text-gray-800 mt-1">فاتورة ضريبية مبسطة</h4>
+                                <span class="text-[9px] text-gray-400 block mt-0.5">الرقم الضريبي:
+                                    300054921000003</span>
+                            </div>
+
+                            <div id="trackBillItems"
+                                class="space-y-2 text-xs font-bold text-gray-700 border-b border-amber-200 pb-4 mb-4">
+                            </div>
+
+                            <div class="space-y-1.5 text-xs font-semibold text-gray-600">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">المجموع الفرعي:</span>
+                                    <span class="font-bold"><span id="billSubtotal">0</span> ريال</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">الضريبة (15%):</span>
+                                    <span class="font-bold"><span id="billVat">0</span> ريال</span>
+                                </div>
+                                <div
+                                    class="flex justify-between text-sokon font-black text-base border-t border-amber-200 pt-3 mt-3">
+                                    <span>الإجمالي النهائي:</span>
+                                    <span><span id="billTotal">0</span> ريال</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="mt-6 pt-4 border-t border-dashed border-amber-200 flex flex-col items-center justify-center">
+                            <div class="bg-white p-2.5 rounded-2xl border border-amber-200 shadow-sm">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=85x85&data=SokonPlatform-ZATCA-Phase1"
+                                    alt="ZATCA QR" class="w-18 h-18">
+                            </div>
+                            <span class="text-[9px] text-gray-400 mt-2 text-center">متوافقة مع اشتراطات هيئة الزكاة
+                                (ZATCA)</span>
+
+                            <!-- زر تحميل/طباعة الفاتورة -->
+                            <button onclick="window.print()"
+                                class="mt-4 w-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold py-2 px-4 rounded-xl text-xs transition duration-300 flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-print"></i>
+                                <span>طباعة / حفظ الفاتورة</span>
+                            </button>
+
+                            <!-- أزرار طلبات الخدمة اللحظية للصالة -->
+                            <div class="mt-6 pt-4 border-t border-dashed border-amber-200 w-full text-center">
+                                <span class="text-[10px] text-gray-500 font-bold block mb-3"><i class="fa-solid fa-bell text-sokon ml-1 animate-bounce"></i>طلب خدمة فورية من الطاولة</span>
+                                <div class="grid grid-cols-1 gap-2">
+                                    <button onclick="requestTableService('cleaning_request')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-3 rounded-xl text-[10px] transition duration-200 flex items-center justify-center gap-1.5 shadow-sm">
+                                        <i class="fa-solid fa-broom text-amber-400"></i>
+                                        <span>طلب تنظيف الطاولة</span>
+                                    </button>
+                                    <button onclick="requestTableService('safari_request')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-3 rounded-xl text-[10px] transition duration-200 flex items-center justify-center gap-1.5 shadow-sm">
+                                        <i class="fa-solid fa-bag-shopping text-blue-400"></i>
+                                        <span>طلب تعبئة سفاري</span>
+                                    </button>
+                                    <button onclick="requestTableService('print_invoice')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-3 rounded-xl text-[10px] transition duration-200 flex items-center justify-center gap-1.5 shadow-sm">
+                                        <i class="fa-solid fa-file-invoice-dollar text-green-400"></i>
+                                        <span>طلب طباعة الفاتورة للكاشير</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- لوحة المطبخ وصالة التحضير (KDS) الفاخرة المنسجمة مع طابع الموقع -->
+    <section id="kitchenSection" class="w-full bg-[#fdfaf7] py-16 hidden border-t border-amber-100 relative overflow-hidden">
+        <!-- عناصر جمالية بالخلفية -->
+        <div class="absolute -top-12 -right-12 w-64 h-64 bg-sokon/5 rounded-full blur-3xl opacity-30"></div>
+        <div class="absolute -bottom-12 -left-12 w-64 h-64 bg-sokon-light/5 rounded-full blur-3xl opacity-30"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <!-- الهيدر العام لشاشة التحكم -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-amber-200/60 pb-6 mb-8 gap-4">
+                <div>
+                    <span class="bg-sokon/10 text-sokon font-bold px-3.5 py-1.5 rounded-full text-[9px] uppercase tracking-wider mb-2 inline-block border border-sokon/20">شاشة بث حية • WebSockets Simulator</span>
+                    <h2 class="text-2xl font-black text-gray-900 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping"></span>
+                        <span>شاشة المطبخ وإرسال الوجبات (KDS Console)</span>
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">عرض ومتابعة حالة الوجبات المجهزة، واستقبال تنبيهات الصالة للفرع رقم branch.fifa_01</p>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button onclick="simulateIncomingOrder()" class="bg-sokon hover:bg-sokon-dark text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-sokon/15 transition hover:-translate-y-0.5">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>محاكاة طلب جديد من الموبايل</span>
+                    </button>
+                    <span class="text-xs bg-white text-gray-600 font-bold px-3.5 py-2.5 rounded-xl border border-slate-100 shadow-sm flex items-center gap-1">
+                        <i class="fa-solid fa-signal text-green-500"></i>
+                        <span>الربط فودكس متصل</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- شبكة التذاكر الحية وتنبيهات الطاولات -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <!-- عمود تذاكر تحضير الأطباق الكلي (3/4 المساحة) -->
+                <div class="lg:col-span-3 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-black text-sm text-gray-800 flex items-center gap-2">
+                            <i class="fa-solid fa-receipt text-sokon"></i>
+                            <span>تذاكر تحضير الوجبات المباشرة</span>
+                        </h3>
+                        <span id="activeOrdersCount" class="text-xs bg-sokon/10 text-sokon font-bold px-2.5 py-1 rounded-lg">2 طلب نشط</span>
+                    </div>
+
+                    <!-- شبكة كروت تذاكر المطبخ بلمسة تذكرة ورقية مقطوعة -->
+                    <div id="kitchenOrdersContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- تُولد بـ JS -->
+                    </div>
+                </div>
+
+                <!-- عمود تنبيهات وخدمات الطاولات (1/4 المساحة) -->
+                <div class="space-y-4">
+                    <h3 class="font-black text-sm text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-bell text-amber-500 animate-bounce"></i>
+                        <span>طلبات وتنبيهات الطاولات حية</span>
+                    </h3>
+                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="text-[10px] text-gray-400 font-bold">الحالات المعلقة</span>
+                            <span id="alertsCountBadge" class="text-[10px] bg-amber-500/10 text-amber-600 font-black px-2 py-0.5 rounded-lg border border-amber-500/20">0 تنبيه</span>
+                        </div>
+                        
+                        <!-- التنبيهات الحية -->
+                        <div id="tableAlertsContainer" class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+                            <div class="text-center py-12 text-slate-400 text-[10px] font-bold">
+                                <i class="fa-solid fa-circle-check text-xl mb-1.5 block text-slate-300"></i>
+                                لا توجد طلبات خدمة معلقة
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- سايد بار السلة -->
+    <div id="cartSidebar"
+        class="fixed inset-y-0 left-0 w-full max-w-sm bg-white shadow-2xl z-[100] transform -translate-x-full transition-transform duration-300 flex flex-col justify-between border-r">
+        <div class="p-5 overflow-y-auto flex-grow">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="text-base font-black text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-basket-shopping text-sokon"></i>
+                    <span>سلة المشتريات</span>
+                </h3>
+                <button onclick="toggleCartSidebar()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="cartItemsList" class="space-y-3">
+                <p class="text-gray-400 text-center py-8 text-xs">السلة فارغة.</p>
+            </div>
+        </div>
+        <div class="p-5 border-t bg-gray-50 space-y-3">
+            <div class="flex justify-between font-medium text-[11px] text-gray-500">
+                <span>نوع الاستلام</span>
+                <select id="orderType" class="bg-white border rounded-lg p-1 text-[11px] focus:ring-sokon">
+                    <option value="local">محلي (طاولة)</option>
+                    <option value="safari">سفري (تيك أواي)</option>
+                </select>
+            </div>
+            <div id="tableSelectorDiv" class="flex justify-between font-medium text-[11px] text-gray-500 items-center">
+                <span>رقم الطاولة</span>
+                <input type="number" id="orderTableNumber" min="1" max="25" value="1"
+                    class="w-12 bg-white border rounded-lg p-1 text-[11px] text-center font-bold text-sokon">
+            </div>
+            <div class="flex justify-between font-black text-gray-900 border-b pb-2 text-sm">
+                <span>الإجمالي (شامل الضريبة):</span>
+                <span class="text-sokon"><span id="cartTotalPrice">0</span> ريال</span>
+            </div>
+            <button onclick="openMoyasarPaymentWindow()"
+                class="w-full bg-sokon hover:bg-sokon-dark text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-md">
+                <span>الدفع الآمن عبر Moyasar</span>
+                <i class="fa-solid fa-credit-card"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- الفوتر الاحترافي المميز -->
+    <footer class="bg-slate-950 text-slate-400 pt-16 pb-8 border-t border-slate-900 mt-auto relative overflow-hidden">
+        <!-- خط هوية المطعم ملون في الأعلى -->
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sokon-light via-sokon to-sokon-dark">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <!-- العمود 1: عن المطعم -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <img src="logo.png" alt="Sokon Logo"
+                            class="h-12 bg-white/5 rounded-xl p-1 border border-white/10"
+                            onerror="this.src='https://placehold.co/150x150?text=Sokon'">
+                        <div>
+                            <span class="text-base font-black text-white block tracking-wide">مَطْعَم سُكُون</span>
+                            <span class="text-[9px] text-slate-500 block -mt-1">إطلالة الخطم — فيفاء</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        نقدم أشهى المأكولات العربية والإيطالية في أعلى قمة جبلية بجبال فيفاء بجازان. تجربة استثنائية
+                        تجمع بين روعة المنظر الطبيعي وعراقة المذاق.
+                    </p>
+                    <!-- أيقونات التواصل الاجتماعي -->
+                    <div class="flex gap-3 pt-2">
+                        <a href="#"
+                            class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-xs text-slate-400 hover:bg-sokon hover:text-white hover:border-sokon transition"><i
+                                class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-xs text-slate-400 hover:bg-sokon hover:text-white hover:border-sokon transition"><i
+                                class="fa-brands fa-instagram"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-xs text-slate-400 hover:bg-sokon hover:text-white hover:border-sokon transition"><i
+                                class="fa-brands fa-tiktok"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-xs text-slate-400 hover:bg-sokon hover:text-white hover:border-sokon transition"><i
+                                class="fa-brands fa-snapchat"></i></a>
+                    </div>
+                </div>
+
+                <!-- العمود 2: روابط سريعة -->
+                <div class="space-y-4">
+                    <h4 class="text-sm font-bold text-white border-r-4 border-sokon pr-2.5">روابط سريعة</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#hero" class="hover:text-sokon transition flex items-center gap-1.5"><i
+                                    class="fa-solid fa-angle-left text-[9px] text-sokon"></i> الرئيسية</a></li>
+                        <li><a href="#about" class="hover:text-sokon transition flex items-center gap-1.5"><i
+                                    class="fa-solid fa-angle-left text-[9px] text-sokon"></i> قصتنا</a></li>
+                        <li><a href="#menu" class="hover:text-sokon transition flex items-center gap-1.5"><i
+                                    class="fa-solid fa-angle-left text-[9px] text-sokon"></i> قائمة الطعام</a></li>
+                        <li><a href="#testimonials" class="hover:text-sokon transition flex items-center gap-1.5"><i
+                                    class="fa-solid fa-angle-left text-[9px] text-sokon"></i> آراء الضيوف</a></li>
+                    </ul>
+                </div>
+
+                <!-- العمود 3: أوقات العمل -->
+                <div class="space-y-4">
+                    <h4 class="text-sm font-bold text-white border-r-4 border-sokon pr-2.5">أوقات العمل</h4>
+                    <ul class="space-y-2.5 text-xs text-slate-500 font-bold">
+                        <li class="flex justify-between border-b border-slate-900 pb-1.5"><span>السبت -
+                                الخميس:</span><span class="text-slate-300">1:00 م - 1:00 ص</span></li>
+                        <li class="flex justify-between border-b border-slate-900 pb-1.5"><span>الجمعة:</span><span
+                                class="text-slate-300">2:00 م - 2:00 ص</span></li>
+                        <li class="flex justify-between"><span>خدمة التوصيل:</span><span
+                                class="text-sokon font-semibold font-bold">متاحة طوال اليوم</span></li>
+                    </ul>
+                </div>
+
+                <!-- العمود 4: معلومات الاتصال -->
+                <div class="space-y-4">
+                    <h4 class="text-sm font-bold text-white border-r-4 border-sokon pr-2.5">تواصل معنا</h4>
+                    <ul class="space-y-3 text-xs text-slate-500">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-phone text-sokon"></i> <span
+                                class="text-slate-300 font-bold">+966 59 999 9999</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-envelope text-sokon"></i> <span
+                                class="text-slate-300">info@sokon.sa</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-sokon"></i> <span
+                                class="text-slate-300">المملكة العربية السعودية، جازان، فيفاء، إطلالة الخطم</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- حقوق الملكية الفكرية -->
+            <div
+                class="border-t border-slate-900 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+                <p>&copy; 2026 جميع الحقوق محفوظة لمطعم وكافيه سُكون.</p>
+                <div class="flex gap-4">
+                    <a href="javascript:void(0)" onclick="toggleModal('termsModal')" class="hover:text-slate-400 transition">الشروط والأحكام</a>
+                    <a href="javascript:void(0)" onclick="toggleModal('privacyModal')" class="hover:text-slate-400 transition">سياسة الخصوصية</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- جافا سكريبت بالكامل وبدون أي Alerts -->
+    <script src="script.js"></script>
+
+    <!-- شريط التنقل السفلي للهواتف (App-like Mobile Navigation) -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-2xl z-50 px-4 py-2 flex justify-around items-center">
+        <a href="#hero" class="flex flex-col items-center text-gray-400 hover:text-sokon transition">
+            <i class="fa-solid fa-house text-base"></i>
+            <span class="text-[9px] mt-1 font-bold">الرئيسية</span>
+        </a>
+        <a href="#about" class="flex flex-col items-center text-gray-400 hover:text-sokon transition">
+            <i class="fa-solid fa-mountain text-base"></i>
+            <span class="text-[9px] mt-1 font-bold">قصتنا</span>
+        </a>
+        <a href="#menu" class="flex flex-col items-center text-gray-400 hover:text-sokon transition">
+            <i class="fa-solid fa-utensils text-base"></i>
+            <span class="text-[9px] mt-1 font-bold">المنيو</span>
+        </a>
+        <button onclick="openBookingModal()"
+            class="flex flex-col items-center text-gray-400 hover:text-sokon transition">
+            <i class="fa-solid fa-calendar-days text-base"></i>
+            <span class="text-[9px] mt-1 font-bold">الحجوزات</span>
+        </button>
+        <button onclick="toggleCartSidebar()"
+            class="flex flex-col items-center text-gray-400 hover:text-sokon transition relative">
+            <i class="fa-solid fa-basket-shopping text-base"></i>
+            <span id="mobileCartCount"
+                class="absolute -top-1 -right-1.5 bg-sokon text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+            <span class="text-[9px] mt-1 font-bold">السلة</span>
+        </button>
+    </div>
+
+    <!-- مودال الشروط والأحكام -->
+    <div id="termsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden animate-fade-in">
+            <!-- الهيدر -->
+            <div class="bg-gradient-to-r from-sokon to-sokon-dark p-6 text-white flex justify-between items-center">
+                <div>
+                    <h3 class="text-base font-black">الشروط والأحكام</h3>
+                    <p class="text-[10px] text-white/70 mt-0.5">اتفاقية استخدام منصة سُكون الرقمية</p>
+                </div>
+                <button onclick="toggleModal('termsModal')" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <!-- المحتوى -->
+            <div class="p-6 overflow-y-auto space-y-4 text-xs text-gray-600 leading-relaxed text-right">
+                <h4 class="font-bold text-gray-800 text-sm">1. مقدمة واستخدام المنصة</h4>
+                <p>باستخدامك لموقع مطعم وكافيه سُكون أو طلبك للوجبات أو حجزك للطاولات، فإنك توافق على الالتزام الكامل بهذه الشروط والأحكام. المنصة تقدم خدمات استعراض المنيو، حجز الطاولات المسبق، ونظام الولاء الرقمي.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">2. حجز الطاولات والعربون</h4>
+                <p>يتطلب حجز الطاولات دفع عربون تأكيدي يخصم من الفاتورة النهائية. يُرجى الحضور في الموعد المحدد، وفي حال التأخر لأكثر من 20 دقيقة، يحتفظ المطعم بحق إلغاء الحجز لضمان تلبية طلبات الضيوف الآخرين.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">3. الدفع الإلكتروني والطلبات</h4>
+                <p>جميع عمليات الدفع تتم عبر بوابة الدفع الآمنة (Moyasar) باستخدام مدى أو فيزا أو أبل باي. الطلبات التي يتم دفعها تُرسل مباشرة لنظام المطبخ الذكي KDS ولا يمكن إلغاؤها بعد بدء التحضير.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">4. نقاط برنامج الولاء</h4>
+                <p>يكتسب العميل نقاط ولاء رقمية مع كل طلب مؤكد من المنصة. لا يمكن استبدال النقاط بمبالغ نقدية وإنما بمكافآت وخصومات حصرية داخل المطعم.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">5. تعديل الشروط</h4>
+                <p>نحتفظ بالحق في تعديل هذه الشروط والأحكام في أي وقت، وتصبح التعديلات نافذة فور نشرها على هذه الصفحة.</p>
+            </div>
+            <!-- الفوتر -->
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button onclick="toggleModal('termsModal')" class="bg-sokon hover:bg-sokon-dark text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md shadow-sokon/15 transition">
+                    موافق وإغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال سياسة الخصوصية -->
+    <div id="privacyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden animate-fade-in">
+            <!-- الهيدر -->
+            <div class="bg-gradient-to-r from-sokon to-sokon-dark p-6 text-white flex justify-between items-center">
+                <div>
+                    <h3 class="text-base font-black">سياسة الخصوصية</h3>
+                    <p class="text-[10px] text-white/70 mt-0.5">كيف نقوم بحماية بيانات ضيوفنا الكرام</p>
+                </div>
+                <button onclick="toggleModal('privacyModal')" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <!-- المحتوى -->
+            <div class="p-6 overflow-y-auto space-y-4 text-xs text-gray-600 leading-relaxed text-right">
+                <h4 class="font-bold text-gray-800 text-sm">1. البيانات التي نجمعها</h4>
+                <p>نقوم بجمع رقم الجوال والاسم عند حجز الطاولة أو تسجيل الدخول ببرنامج الولاء، وذلك لغرض إرسال رسائل التحقق النصية (OTP) وتخصيص تجربتك وتتبع طلباتك.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">2. حماية وتشفير البيانات</h4>
+                <p>نحن نلتزم بأعلى معايير الأمان السيبراني. جميع الاتصالات مشفرة عبر بروتوكول SSL الآمن، وتتم معالجة بيانات بطاقات الدفع بشكل مباشر ومشفر بواسطة نظام Moyasar المعتمد دون حفظها في خوادمنا.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">3. مشاركة البيانات</h4>
+                <p>نحن لا نبيع ولا نتاجر ولا نشارك بياناتك الشخصية مع أي أطراف ثالثة خارجية، باستثناء شركاء معالجة المدفوعات والجهات التنظيمية الرسمية عند الطلب القانوني.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">4. ملفات تعريف الارتباط (Cookies)</h4>
+                <p>نستخدم ملفات تعريف ارتباط خفيفة ومؤقتة لحفظ حالة السلة وجلسة تسجيل الدخول لضمان عدم فقدان طلباتك أثناء التصفح.</p>
+
+                <h4 class="font-bold text-gray-800 text-sm">5. حقوقك القانونية</h4>
+                <p>لديك الحق الكامل في طلب تعديل بياناتك أو حذف حسابك وبرنامج الولاء الخاص بك بشكل نهائي من خلال التواصل معنا عبر البريد الإلكتروني المعتمد.</p>
+            </div>
+            <!-- الفوتر -->
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button onclick="toggleModal('privacyModal')" class="bg-sokon hover:bg-sokon-dark text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md shadow-sokon/15 transition">
+                    موافق وإغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
