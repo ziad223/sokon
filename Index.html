@@ -292,12 +292,13 @@
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center gap-6 font-semibold text-gray-600 text-sm">
+            <nav class="hidden lg:flex items-center gap-5 font-semibold text-gray-600 text-sm">
                 <a href="#hero" class="hover:text-sokon transition">الرئيسية</a>
                 <a href="#about" class="hover:text-sokon transition">قصتنا</a>
                 <a href="#menu" class="hover:text-sokon transition">قائمة الطعام</a>
+                <a href="#huts-dewaniya" class="hover:text-sokon transition">الحجوزات</a>
+                <a href="#subscriptions" class="hover:text-sokon transition">الاشتراكات</a>
                 <a href="#testimonials" class="hover:text-sokon transition">آراء الضيوف</a>
-                <a href="#loyalty" class="hover:text-sokon transition">كارت الولاء</a>
                 <button onclick="toggleKitchenSection()" class="bg-slate-900 text-white hover:bg-sokon transition px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm">
                     <i class="fa-solid fa-desktop"></i>
                     <span>شاشة المطبخ (KDS)</span>
@@ -336,10 +337,11 @@
             <span
                 class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider mb-4 inline-block border border-sokon/20">تذوق
                 الأصالة من قمم فيفاء</span>
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight max-w-3xl mx-auto">
-                أطباق <span class="text-sokon">عربية وإيطالية</span> ساحرة مع إطلالة سُكون
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-normal max-w-3xl mx-auto">
+                أطباق <span class="text-sokon">عربية وإيطالية</span> ساحرة
+                <span class="block mt-4 md:mt-6">مع إطلالة سُكون</span>
             </h1>
-            <p class="text-gray-500 mt-4 max-w-xl mx-auto text-sm">
+            <p class="text-gray-500 mt-8 md:mt-10 max-w-xl mx-auto text-sm">
                 تجربة استثنائية مربوطة لحظياً بأنظمة Foodics والمطبخ الذكي.
             </p>
             <div class="mt-6 flex flex-wrap justify-center gap-3">
@@ -463,6 +465,150 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="menuGrid">
                 <!-- تُولد بـ JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الأكواخ والديوانية -->
+    <section id="huts-dewaniya" class="w-full py-20 bg-white border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider mb-2 inline-block border border-sokon/20">تجارب حصرية</span>
+                <h2 class="text-3xl font-black text-gray-900 leading-tight">الأكواخ والديوانية</h2>
+                <p class="text-xs text-gray-500 mt-2">استمتع بالخصوصية التامة والمناظر البانورامية في مساحاتنا المخصصة</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- الأكواخ -->
+                <div class="group relative rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=800&q=80" alt="الأكواخ" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <h3 class="text-2xl font-black text-white mb-2">أكواخ سُكون المعلقة</h3>
+                                <p class="text-white/80 text-xs mb-4 max-w-sm">خصوصية تامة لعائلتك مع إطلالة تحبس الأنفاس على الضباب وجبال فيفاء. شاملة ضيافة القهوة السعودية.</p>
+                            </div>
+                            <button onclick="openBookingModal('hut')" class="bg-sokon hover:bg-sokon-light text-white font-bold px-5 py-2.5 rounded-xl transition text-xs shrink-0 shadow-lg shadow-sokon/30">
+                                احجز كوخك
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الديوانية -->
+                <div class="group relative rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80" alt="الديوانية" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <h3 class="text-2xl font-black text-white mb-2">الديوانية الكبرى</h3>
+                                <p class="text-white/80 text-xs mb-4 max-w-sm">مساحة واسعة تناسب اجتماعات الأصدقاء والمناسبات الخاصة، مجهزة بأحدث وسائل الراحة وشاشات العرض.</p>
+                            </div>
+                            <button onclick="openBookingModal('dewaniya')" class="bg-white text-sokon hover:bg-gray-100 font-bold px-5 py-2.5 rounded-xl transition text-xs shrink-0 shadow-lg">
+                                حجز الديوانية
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الباقات الشهرية -->
+    <section id="subscriptions" class="w-full py-24 bg-white border-t border-gray-100 relative overflow-hidden">
+        <!-- زينة خلفية -->
+        <div class="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-sokon/5 rounded-full blur-3xl opacity-50"></div>
+            <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-3xl opacity-50"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20">
+                <span class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider mb-3 inline-block border border-sokon/20 shadow-sm">اشترك ووفر</span>
+                <h2 class="text-3xl md:text-4xl font-black text-gray-900 leading-tight">الباقات الشهرية الذكية</h2>
+                <p class="text-xs md:text-sm text-gray-500 mt-3 max-w-2xl mx-auto">ارتقِ بتجربتك اليومية معنا. اختر الباقة التي تناسب أسلوب حياتك واستمتع بقهوتك أو وجباتك المفضلة بتوفير استثنائي وخدمة لكبار الشخصيات.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
+                <!-- الباقة الفضية -->
+                <div class="group bg-white rounded-[2rem] p-8 border border-gray-100 shadow-lg hover:shadow-2xl hover:border-sokon/20 transition-all duration-500 flex flex-col relative transform hover:-translate-y-2 z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 text-2xl mb-6 group-hover:scale-110 group-hover:text-sokon transition-all duration-500 shadow-sm">
+                        <i class="fa-solid fa-mug-hot"></i>
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="text-xl font-black text-gray-800 mb-1">باقة القهوة (الفضية)</h3>
+                        <p class="text-[11px] text-gray-400 font-medium">مثالية لعشاق القهوة اليومية</p>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-5xl font-black text-gray-900 group-hover:text-sokon transition-colors duration-300">199</span>
+                        <span class="text-xs text-gray-500 font-bold">ريال / شهرياً</span>
+                    </div>
+                    <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
+                    <ul class="space-y-4 mb-10 flex-1 text-sm text-gray-600 font-medium">
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> قهوة يومية (حار أو بارد)</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 10% على الحلى</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> أولوية في استلام الطلب</li>
+                    </ul>
+                    <button onclick="subscribePackage('silver')" class="w-full py-3.5 rounded-xl font-bold bg-slate-50 text-slate-600 border border-slate-200 group-hover:bg-sokon group-hover:text-white group-hover:border-sokon transition-all duration-300 text-sm shadow-sm">
+                        ابدأ اشتراكك الآن
+                    </button>
+                </div>
+
+                <!-- الباقة الذهبية -->
+                <div class="group bg-gradient-to-br from-sokon to-sokon-dark rounded-[2.5rem] p-10 shadow-2xl shadow-sokon/30 transform md:-translate-y-6 flex flex-col relative text-white border border-sokon-light/40 overflow-hidden z-20">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+                    <div class="absolute top-6 left-6">
+                        <span class="bg-gradient-to-r from-amber-300 to-yellow-500 text-slate-900 text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5"><i class="fa-solid fa-star text-[9px]"></i> الخيار المفضل</span>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white text-3xl mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-black text-white mb-1">باقة الفطور (الذهبية)</h3>
+                        <p class="text-xs text-white/70 font-medium">بداية مثالية ليومك بكل نشاط</p>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-6xl font-black text-white drop-shadow-md">499</span>
+                        <span class="text-xs text-white/70 font-bold">ريال / شهرياً</span>
+                    </div>
+                    <div class="w-full h-px bg-white/10 mb-8"></div>
+                    <ul class="space-y-4 mb-10 flex-1 text-sm text-white/90 font-medium">
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> فطور يومي من اختيارك</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> قهوة أو شاي مجاناً</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> خدمة توصيل مجانية للدوام</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> 100 نقطة ولاء إضافية مجاناً</li>
+                    </ul>
+                    <button onclick="subscribePackage('gold')" class="w-full py-4 rounded-xl font-black bg-white text-sokon hover:bg-gray-50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-sm shadow-lg relative overflow-hidden">
+                        <span class="relative z-10">احصل على الباقة الذهبية</span>
+                    </button>
+                </div>
+
+                <!-- الباقة البلاتينية -->
+                <div class="group bg-white rounded-[2rem] p-8 border border-gray-100 shadow-lg hover:shadow-2xl hover:border-slate-800/20 transition-all duration-500 flex flex-col relative transform hover:-translate-y-2 z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 text-2xl mb-6 group-hover:scale-110 group-hover:text-slate-800 transition-all duration-500 shadow-sm">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="text-xl font-black text-gray-800 mb-1">الباقة الشاملة (البلاتينية)</h3>
+                        <p class="text-[11px] text-gray-400 font-medium">الرفاهية الكاملة وتجربة لا تُنسى</p>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-5xl font-black text-gray-900 group-hover:text-slate-800 transition-colors duration-300">899</span>
+                        <span class="text-xs text-gray-500 font-bold">ريال / شهرياً</span>
+                    </div>
+                    <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
+                    <ul class="space-y-4 mb-10 flex-1 text-sm text-gray-600 font-medium">
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> وجبتين يومياً (فطور/غداء أو عشاء)</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> مشروبات مفتوحة (حد أقصى 3)</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> حجز مجاني للديوانية (مرة شهرياً)</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> دعوة ضيف مجاناً (مرتين شهرياً)</li>
+                    </ul>
+                    <button onclick="subscribePackage('platinum')" class="w-full py-3.5 rounded-xl font-bold bg-slate-50 text-slate-600 border border-slate-200 group-hover:bg-slate-800 group-hover:text-white group-hover:border-slate-800 transition-all duration-300 text-sm shadow-sm">
+                        اكتشف الرفاهية
+                    </button>
+                </div>
             </div>
         </div>
     </section>

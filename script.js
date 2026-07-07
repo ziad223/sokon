@@ -939,3 +939,31 @@
                 }
             }, 8000);
         }
+
+        function openBookingModal(type = 'table') {
+            const title = document.querySelector('#bookingModal h3');
+            if(type === 'hut') {
+                title.innerHTML = '<i class="fa-solid fa-house-chimney-window ml-2"></i>حجز كوخ سُكون';
+            } else if(type === 'dewaniya') {
+                title.innerHTML = '<i class="fa-solid fa-couch ml-2"></i>حجز الديوانية الكبرى';
+            } else {
+                title.innerHTML = '<i class="fa-solid fa-calendar-days ml-2"></i>حجز طاولة - إطلالة الخطم';
+            }
+            toggleModal('bookingModal');
+        }
+
+        function subscribePackage(pkgType) {
+            let pkgName = '';
+            if(pkgType === 'silver') pkgName = 'الباقة الفضية (القهوة)';
+            if(pkgType === 'gold') pkgName = 'الباقة الذهبية (الفطور)';
+            if(pkgType === 'platinum') pkgName = 'الباقة البلاتينية (الشاملة)';
+            
+            showToast(`تم اختيار ${pkgName}. سيتم فتح بوابة الدفع...`, 'success');
+            
+            // محاكاة فتح بوابة الدفع بعد ثانية
+            setTimeout(() => {
+                document.getElementById('moyasarPayAmount').innerText = 
+                    pkgType === 'silver' ? '199' : (pkgType === 'gold' ? '499' : '899');
+                toggleModal('moyasarModal');
+            }, 1000);
+        }
