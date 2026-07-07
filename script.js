@@ -311,27 +311,168 @@
 
         // الحجوزات
         let selectedTableNum = null;
-        function openBookingModal() {
-            const grid = document.getElementById('tablesGrid');
-            grid.innerHTML = '';
-            for (let i = 1; i <= 6; i++) {
-                grid.innerHTML += `
-                    <div onclick="selectTable(${i})" id="book_table_${i}" class="p-2 border text-center rounded-xl bg-gray-50 text-gray-700 border-gray-200 text-xs font-bold cursor-pointer hover:border-sokon transition">
-                        طاولة ${i}
-                    </div>
-                `;
+        let selectedCabinName = null;
+        
+        const cabinsData = ['كوخ الضباب', 'كوخ السحاب', 'كوخ القمة', 'كوخ النجوم', 'كوخ القمر', 'كوخ الشرفة', 'كوخ الوادي', 'كوخ الخطم'];
+
+        function openBookingModal(type = 'hut') {
+            var bType = type === 'dewaniya' ? 'ديوانية' : (type === 'table' ? 'طاولة' : 'كوخ');
+            window.currentBookingType = bType;
+            window.currentBookingMode = type;
+            window.currentBranch = 'khatm';
+            
+            const branchContainer = document.getElementById('branchSelectorContainer');
+            if (branchContainer) {
+                if (type === 'table') {
+                    branchContainer.classList.remove('hidden');
+                    selectBranch('khatm', false);
+                } else {
+                    branchContainer.classList.add('hidden');
+                }
             }
-            selectedTableNum = null;
+            
+            renderGrid();
+            
+            const titleEl = document.getElementById('bookingModalTitle');
+            const labelEl = document.getElementById('bookingModalLabel');
+            
+            if (titleEl) {
+                let iconCls = 'fa-calendar-days';
+                if (type === 'dewaniya') iconCls = 'fa-couch';
+                if (type === 'hut') iconCls = 'fa-house-chimney';
+                if (type === 'table') iconCls = 'fa-chair';
+                titleEl.innerHTML = `<i class="fa-solid ${iconCls} ml-2"></i>حجز ${bType} - سُكون`;
+            }
+            if (labelEl) {
+                labelEl.innerText = `اختر ال${bType} المتاح`;
+            }
+
             toggleModal('bookingModal');
         }
 
-        function selectTable(num) {
-            for (let i = 1; i <= 6; i++) {
-                const el = document.getElementById(`book_table_${i}`);
-                if (el) el.className = "p-2 border text-center rounded-xl bg-gray-50 text-gray-700 border-gray-200 text-xs font-bold cursor-pointer hover:border-sokon transition";
+        function selectBranch(branchId, doRender = true) {
+            window.currentBranch = branchId;
+            const btnKhatm = document.getElementById('branch_khatm');
+            const btnNafea = document.getElementById('branch_nafea');
+            if (btnKhatm && btnNafea) {
+                btnKhatm.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-700 transition";
+                btnNafea.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-700 transition";
+                document.getElementById('branch_' + branchId).className = "flex-1 py-2 text-xs font-bold rounded-lg bg-white shadow text-sokon transition";
             }
-            document.getElementById(`book_table_${num}`).className = "p-2 border text-center rounded-xl bg-sokon text-white border-sokon text-xs font-bold shadow-md cursor-pointer transition";
+            if (doRender) renderGrid();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('tablesGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            let type = window.currentBookingMode;
+            if (type === 'hut') {
+                for (let i = 0; i < cabinsData.length; i++) {
+                    let num = i + 1;
+                    let cName = cabinsData[i];
+                    grid.innerHTML += `
+                        <div onclick="selectTable(${num}, '${cName}')" id="book_table_${num}" class="p-2 border text-center rounded-xl bg-gray-50 text-gray-700 border-gray-200 text-xs font-bold cursor-pointer hover:border-sokon transition flex items-center justify-center h-12">
+                            ${cName}
+                        </div>
+                    `;
+                }
+            } else if (type === 'table') {
+                let tableCount = window.currentBranch === 'nafea' ? 15 : 10;
+                let branchName = window.currentBranch === 'nafea' ? 'سوق النفعية' : 'الخطم';
+                for (let i = 1; i <= tableCount; i++) {
+                    grid.innerHTML += `
+                        <div onclick="selectTable(${i}, 'طاولة ${i} (${branchName})')" id="book_table_${i}" class="p-2 border text-center rounded-xl bg-gray-50 text-gray-700 border-gray-200 text-xs font-bold cursor-pointer hover:border-sokon transition flex items-center justify-center h-12">
+                            طاولة ${i}
+                        </div>
+                    `;
+                }
+            } else if (type === 'dewaniya') {
+                for (let i = 1; i <= 3; i++) {
+                    grid.innerHTML += `
+                        <div onclick="selectTable(${i}, 'ديوانية ${i}')" id="book_table_${i}" class="p-2 border text-center rounded-xl bg-gray-50 text-gray-700 border-gray-200 text-xs font-bold cursor-pointer hover:border-sokon transition flex items-center justify-center h-12">
+                            ديوانية ${i}
+                        </div>
+                    `;
+                }
+            }
+            
+            selectedTableNum = null;
+            selectedCabinName = null;
+            
+            const warningEl = document.getElementById('bookingConflictWarning');
+            if(warningEl) {
+                warningEl.classList.add('hidden');
+                warningEl.innerHTML = '';
+            }
+            if(window.availabilityInterval) clearInterval(window.availabilityInterval);
+        }
+
+        function selectTable(num, name = '') {
+            let maxCount = window.currentBookingMode === 'hut' ? cabinsData.length : (window.currentBookingMode === 'table' ? (window.currentBranch === 'nafea' ? 15 : 10) : 3);
+            for (let i = 1; i <= maxCount; i++) {
+                const el = document.getElementById(`book_table_${i}`);
+                if (el) el.className = "p-2 border text-center rounded-xl bg-gray-50 text-gray-700 border-gray-200 text-xs font-bold cursor-pointer hover:border-sokon transition flex items-center justify-center h-12";
+            }
+            const selectedEl = document.getElementById(`book_table_${num}`);
+            if (selectedEl) {
+                selectedEl.className = "p-2 border text-center rounded-xl bg-sokon text-white border-sokon text-xs font-bold shadow-md cursor-pointer transition flex items-center justify-center h-12";
+            }
             selectedTableNum = num;
+            selectedCabinName = name || (window.currentBookingType + ' ' + num);
+            
+            const warningEl = document.getElementById('bookingConflictWarning');
+            if(warningEl) {
+                // محاكاة تنبيه وجود حجز سابق
+                if(num % 2 === 0) {
+                    warningEl.classList.remove('hidden');
+                    warningEl.innerHTML = `<p class="font-bold text-xs"><i class="fa-solid fa-clock-rotate-left mr-1"></i> تنبيه هام: يوجد حجز مؤكد يسبق موعدك.</p>
+                                          <div class="mt-2 flex items-center justify-between bg-blue-100/50 p-2 rounded-lg border border-blue-200">
+                                              <span class="text-[11px] font-semibold">الوقت المتبقي لإتاحة ال${window.currentBookingType}:</span>
+                                              <span id="availabilityTimer" class="font-black text-sm text-blue-700 tracking-widest">--:--:--</span>
+                                          </div>`;
+                    startAvailabilityCounter('availabilityTimer');
+                } else {
+                    warningEl.classList.add('hidden');
+                    if(window.availabilityInterval) clearInterval(window.availabilityInterval);
+                }
+            }
+        }
+
+        function startAvailabilityCounter(elementId) {
+            if (window.availabilityInterval) clearInterval(window.availabilityInterval);
+            
+            // محاكاة وقت عشوائي بين 15 دقيقة و 45 دقيقة بالثواني
+            let totalSeconds = Math.floor(Math.random() * (2700 - 900 + 1)) + 900;
+            
+            const updateTimer = () => {
+                const el = document.getElementById(elementId);
+                if (!el) {
+                    clearInterval(window.availabilityInterval);
+                    return;
+                }
+                
+                if (totalSeconds <= 0) {
+                    el.innerText = "متاح الآن!";
+                    clearInterval(window.availabilityInterval);
+                    return;
+                }
+                
+                let h = Math.floor(totalSeconds / 3600);
+                let m = Math.floor((totalSeconds % 3600) / 60);
+                let s = totalSeconds % 60;
+                
+                el.innerText = 
+                    (h > 0 ? h.toString().padStart(2, '0') + ':' : '') +
+                    m.toString().padStart(2, '0') + ':' + 
+                    s.toString().padStart(2, '0');
+                    
+                totalSeconds--;
+            };
+            
+            updateTimer();
+            window.availabilityInterval = setInterval(updateTimer, 1000);
         }
 
         function confirmBooking() {
@@ -340,7 +481,7 @@
                 return;
             }
             if (!selectedTableNum) {
-                showToast("يرجى اختيار الطاولة المتاحة أولاً", "error");
+                showToast("يرجى اختيار الكوخ/الديوانية المتاحة أولاً", "error");
                 return;
             }
             if (!currentUser) {
@@ -350,7 +491,7 @@
                 return;
             }
             toggleModal('bookingModal');
-            showToast(`تم الحجز بنجاح (طاولة ${selectedTableNum}) وتم خصم العربون.`, 'success');
+            showToast(`تم الحجز بنجاح (${selectedCabinName}) وتم خصم العربون. يرجى الاستعداد لتسليم المكان في وقتك المحدد لوجود حجز مؤكد بعدك.`, 'success', 5000);
         }
 
         // ميسر
@@ -938,18 +1079,6 @@
                     startAutoProgressSimulation(orderId);
                 }
             }, 8000);
-        }
-
-        function openBookingModal(type = 'table') {
-            const title = document.querySelector('#bookingModal h3');
-            if(type === 'hut') {
-                title.innerHTML = '<i class="fa-solid fa-house-chimney-window ml-2"></i>حجز كوخ سُكون';
-            } else if(type === 'dewaniya') {
-                title.innerHTML = '<i class="fa-solid fa-couch ml-2"></i>حجز الديوانية الكبرى';
-            } else {
-                title.innerHTML = '<i class="fa-solid fa-calendar-days ml-2"></i>حجز طاولة - إطلالة الخطم';
-            }
-            toggleModal('bookingModal');
         }
 
         function subscribePackage(pkgType) {

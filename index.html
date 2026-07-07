@@ -158,8 +158,8 @@
                 class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 transition">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="text-xl font-bold text-sokon mb-4"><i class="fa-solid fa-calendar-days ml-2"></i>حجز طاولة -
-                ديوانية سُكون</h3>
+            <h3 class="text-xl font-bold text-sokon mb-4" id="bookingModalTitle"><i class="fa-solid fa-calendar-days ml-2"></i>حجز كوخ -
+                سُكون</h3>
 
             <div class="space-y-4">
                 <div>
@@ -167,11 +167,23 @@
                     <input type="date" id="bookingDate"
                         class="w-full border border-gray-300 rounded-xl p-3 focus:ring-sokon focus:border-sokon">
                 </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">اختر الطاولة المتاحة</label>
-                    <div class="grid grid-cols-3 gap-2" id="tablesGrid">
-                        <!-- تُولد عبر JS -->
+                
+                <div id="branchSelectorContainer" class="hidden">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">الفرع المطلوب</label>
+                    <div class="flex bg-gray-100 rounded-xl p-1">
+                        <button id="branch_khatm" onclick="selectBranch('khatm')" class="flex-1 py-2 text-xs font-bold rounded-lg bg-white shadow text-sokon transition">إطلالة الخطم</button>
+                        <button id="branch_nafea" onclick="selectBranch('nafea')" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-700 transition">سوق النفعية (كافيه)</button>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2" id="bookingModalLabel">اختر الكوخ المتاح</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="tablesGrid">
+                        <!-- تُولد وتُدار العناصر عبر الجافاسكربت لتشمل الأكواخ، الطاولات، والديوانية -->
+                    </div>
+                </div>
+                <!-- تنبيه تعارض الحجوزات يظهر عبر JS -->
+                <div id="bookingConflictWarning" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-3 text-sm text-blue-800 transition-all duration-300">
                 </div>
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
                     <p class="font-bold text-xs"><i class="fa-solid fa-circle-info ml-1"></i> سياسة العربون والاسترداد:
@@ -348,9 +360,13 @@
                     class="bg-sokon hover:bg-sokon-dark text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-sokon/20 transition transform hover:-translate-y-0.5 text-sm">
                     تصفح المنيو
                 </a>
-                <button onclick="openBookingModal()"
+                <button onclick="openBookingModal('hut')"
                     class="bg-white border-2 border-sokon/30 hover:border-sokon text-sokon font-bold px-6 py-3 rounded-xl transition text-sm">
-                    <i class="fa-solid fa-table-cells ml-2"></i>حجز طاولة
+                    <i class="fa-solid fa-house-chimney ml-2"></i>احجز كوخك
+                </button>
+                <button onclick="openBookingModal('table')"
+                    class="bg-white border-2 border-sokon/30 hover:border-sokon text-sokon font-bold px-6 py-3 rounded-xl transition text-sm">
+                    <i class="fa-solid fa-utensils ml-2"></i>احجز طاولة
                 </button>
             </div>
         </div>
@@ -481,7 +497,7 @@
                 <!-- الأكواخ -->
                 <div class="group relative rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=800&q=80" alt="الأكواخ" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
+                    <img src="./cabin.png" alt="الأكواخ" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
                     <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                         <div class="flex justify-between items-end">
                             <div>
@@ -498,7 +514,7 @@
                 <!-- الديوانية -->
                 <div class="group relative rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80" alt="الديوانية" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
+                    <img src="./dewaniya.png" alt="الديوانية" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
                     <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                         <div class="flex justify-between items-end">
                             <div>
@@ -509,6 +525,62 @@
                                 حجز الديوانية
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم فروعنا -->
+    <section id="branches" class="w-full py-20 bg-slate-50 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="bg-sokon/10 text-sokon font-bold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider mb-2 inline-block border border-sokon/20">توسّعنا لأجلك</span>
+                <h2 class="text-3xl font-black text-gray-900 leading-tight">فروع سُكون</h2>
+                <p class="text-xs text-gray-500 mt-2">اختر الفرع الأقرب إليك واكتشف الأجواء المختلفة لكل فرع</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- فرع إطلالة الخطم -->
+                <div class="bg-white rounded-[2rem] overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="./cabin.png" alt="فرع إطلالة الخطم" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-sokon shadow-sm">
+                            الفرع الرئيسي
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-black text-gray-900 mb-3"><i class="fa-solid fa-mountain-sun text-sokon ml-2"></i>سُكون - إطلالة الخطم</h3>
+                        <p class="text-xs text-gray-500 mb-6 leading-relaxed">
+                            الفرع الرئيسي المتكامل بأجواء جبلية ساحرة. يوفر مطعماً، مقهى، أكواخاً خشبية معلقة للخصوصية التامة، بالإضافة إلى الديوانية الكبرى للمناسبات.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-utensils ml-1"></i>طاولات</span>
+                            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-house-chimney ml-1"></i>أكواخ</span>
+                            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-couch ml-1"></i>ديوانية</span>
+                        </div>
+                        <button onclick="openBookingModal('hut')" class="w-full bg-sokon text-white font-bold py-3 rounded-xl hover:bg-sokon-dark transition text-sm">احجز في إطلالة الخطم</button>
+                    </div>
+                </div>
+
+                <!-- فرع سوق النفعية -->
+                <div class="bg-white rounded-[2rem] overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" alt="فرع سوق النفعية" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-sokon shadow-sm">
+                            فرع جديد
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-black text-gray-900 mb-3"><i class="fa-solid fa-mug-hot text-sokon ml-2"></i>سُكون - سوق النفعية</h3>
+                        <p class="text-xs text-gray-500 mb-6 leading-relaxed">
+                            فرع الكافيه المميز في قلب سوق النفعية. يقدم تجربة قهوة استثنائية وجلسات مريحة على الطاولات فقط لتستمتع بمشروبك المفضل مع الأصدقاء.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-mug-saucer ml-1"></i>كافيه</span>
+                            <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-chair ml-1"></i>طاولات فقط</span>
+                        </div>
+                        <button onclick="openBookingModal('table')" class="w-full bg-white text-sokon border-2 border-sokon/30 font-bold py-3 rounded-xl hover:border-sokon transition text-sm">احجز طاولة في سوق النفعية</button>
                     </div>
                 </div>
             </div>
@@ -547,8 +619,8 @@
                     <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
                     <ul class="space-y-4 mb-10 flex-1 text-sm text-gray-600 font-medium">
                         <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> قهوة يومية (حار أو بارد)</li>
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 10% على الحلى</li>
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> أولوية في استلام الطلب</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 5% على إجمالي الفاتورة</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 10% على حجز الأكواخ</li>
                     </ul>
                     <button onclick="subscribePackage('silver')" class="w-full py-3.5 rounded-xl font-bold bg-slate-50 text-slate-600 border border-slate-200 group-hover:bg-sokon group-hover:text-white group-hover:border-sokon transition-all duration-300 text-sm shadow-sm">
                         ابدأ اشتراكك الآن
@@ -574,10 +646,10 @@
                     </div>
                     <div class="w-full h-px bg-white/10 mb-8"></div>
                     <ul class="space-y-4 mb-10 flex-1 text-sm text-white/90 font-medium">
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> فطور يومي من اختيارك</li>
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> قهوة أو شاي مجاناً</li>
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> خدمة توصيل مجانية للدوام</li>
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> 100 نقطة ولاء إضافية مجاناً</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 15% على إجمالي الفاتورة</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 25% على حجز الأكواخ</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> صلاحية الحجز في أوقات الذروة (الويكند)</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-white/20 text-yellow-300 flex items-center justify-center shrink-0 backdrop-blur-sm"><i class="fa-solid fa-check text-[10px]"></i></div> فطور وقهوة يومية مجاناً</li>
                     </ul>
                     <button onclick="subscribePackage('gold')" class="w-full py-4 rounded-xl font-black bg-white text-sokon hover:bg-gray-50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-sm shadow-lg relative overflow-hidden">
                         <span class="relative z-10">احصل على الباقة الذهبية</span>
@@ -599,10 +671,10 @@
                     </div>
                     <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
                     <ul class="space-y-4 mb-10 flex-1 text-sm text-gray-600 font-medium">
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> وجبتين يومياً (فطور/غداء أو عشاء)</li>
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> مشروبات مفتوحة (حد أقصى 3)</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 30% على إجمالي الفاتورة</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> خصم 50% على حجز الأكواخ</li>
+                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> أولوية الحجز المفتوح في أي وقت وأي يوم</li>
                         <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> حجز مجاني للديوانية (مرة شهرياً)</li>
-                        <li class="flex items-center gap-3"><div class="w-5 h-5 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check text-[10px]"></i></div> دعوة ضيف مجاناً (مرتين شهرياً)</li>
                     </ul>
                     <button onclick="subscribePackage('platinum')" class="w-full py-3.5 rounded-xl font-bold bg-slate-50 text-slate-600 border border-slate-200 group-hover:bg-slate-800 group-hover:text-white group-hover:border-slate-800 transition-all duration-300 text-sm shadow-sm">
                         اكتشف الرفاهية
